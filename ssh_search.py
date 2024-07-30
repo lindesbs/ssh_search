@@ -35,8 +35,7 @@ def read_config():
     config_path = os.path.expanduser("~/.ssh_search.yaml")
 
     if not os.path.isfile(config_path):
-        initial_data = ['terminal: "gnome-terminal -- ssh {host}"']
-        initial_data = yaml.dump(initial_data)
+        initial_data = 'terminal: "gnome-terminal -- ssh {host}"'
         print(initial_data, file=open(config_path, 'w'))
 
     with open(config_path, 'r') as file:
