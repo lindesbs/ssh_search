@@ -7,6 +7,7 @@ import paramiko
 import yaml
 from PyQt5.QtWidgets import QApplication, QVBoxLayout, QWidget, QLineEdit, QListWidget, QListWidgetItem
 
+
 def read_ssh_config():
     ssh_config_path = os.path.expanduser("~/.ssh/config")
     ssh_config = paramiko.SSHConfig()
@@ -20,7 +21,7 @@ def read_ssh_config():
             for line in f:
                 if line.strip().startswith('Include'):
                     _, included_path = line.split(None, 1)
-                    included_path = "~/.ssh/"+included_path.strip()
+                    included_path = "~/.ssh/" + included_path.strip()
                     included_path = os.path.expanduser(included_path)
 
                     for include_file in glob.glob(included_path):
@@ -31,9 +32,16 @@ def read_ssh_config():
 
 
 def read_config():
-    config_path = "ssh_search.yaml"
+    config_path = os.path.expanduser("~/.ssh_search.yaml")
+
+    if not os.path.isfile(config_path):
+        initial_data = ['terminal: "gnome-terminal -- ssh {host}"']
+        initial_data = yaml.dump(initial_data)
+        print(initial_data, file=open(config_path, 'w'))
+
     with open(config_path, 'r') as file:
         return yaml.safe_load(file)
+
 
 class SSHConfigSearch(QWidget):
     def __init__(self):
@@ -78,7 +86,6 @@ class SSHConfigSearch(QWidget):
         host = item.text()
         terminal_command = self.config['terminal'].format(host=host)
         subprocess.run(terminal_command, shell=True)
-
 
 
 if __name__ == '__main__':
