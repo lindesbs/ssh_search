@@ -78,6 +78,7 @@ class SSHConfigSearch(QWidget):
 
     def update_listbox(self, host_list):
         self.list_widget.clear()
+        host_list.sort()
         for host in host_list:
             QListWidgetItem(host, self.list_widget)
 
